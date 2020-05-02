@@ -5,15 +5,21 @@ import math
 def decorator(function):
     cache = {}
 
-    def decorate(*args):
-        if args in cache:
-            print("Decorator worked!")
-            return cache[args]
+    def decorate(*args, **kwargs):
+        key = args + tuple(sorted(kwargs.items()))
+        if key not in cache:
+            try:
+                value = function(*args, **kwargs)
+            except Exception:
+                raise ValueError
+            cache[key] = value
+            return value
         else:
-            cache[args] = function(*args)
-            return cache[args]
+            print('Done!')
+            return cache[key]
 
     return decorate
+
 
 
 @decorator
